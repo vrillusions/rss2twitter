@@ -17,7 +17,7 @@ import feedparser
 import tweepy
 
 
-__version__ = '0.0.2'
+__version__ = open('VERSION.txt', 'r').read()
 
 
 def post_update(status):
