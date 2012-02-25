@@ -1,0 +1,1 @@
+recursive-include src config-sample.ini *.txt *.mkd COPYING

@@ -1,0 +1,6 @@
+src/config.ini
+src/cache.dat
+build
+dist
+*.egg-info
+requirements.txt
