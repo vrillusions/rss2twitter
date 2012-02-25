@@ -12,6 +12,7 @@ import os
 import traceback
 import cPickle
 from ConfigParser import SafeConfigParser
+from optparse import OptionParser
 
 import feedparser
 import tweepy
@@ -40,8 +41,13 @@ def post_update(status):
 
 def main():
     """The main function."""
+    parser = OptionParser(version='%prog v' + __version__)
+    parser.add_option('-c', '--config', default='config.ini',
+                      help='Location of config file (default: %default)',
+                      metavar='FILE')
+    (options, args) = parser.parse_args()
     config = SafeConfigParser()
-    if not config.read('config.ini'):
+    if not config.read(options.config):
         print 'Could not read config file'
         sys.exit(1)
     rss_uri = config.get('rss', 'uri')
