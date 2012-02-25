@@ -1,5 +1,0 @@
-# RSS 2 Twitter
-
-Will check a RSS feed.  If there is a new entry it will send it to twitter.
-Goal is for it to run a lot like a local version of feedburner but only posts
-to twitter.
