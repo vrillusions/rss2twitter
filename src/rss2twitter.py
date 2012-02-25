@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # vim:ts=4:sw=4:ft=python:fileencoding=utf-8
-"""Python Template.
+"""Checks rss feed and posts to twitter.
 
-This is a template for python.
+Check an rss feed and if the latest entry is different than post it to twitter.
 
 """
 
@@ -14,18 +14,14 @@ import cPickle
 from ConfigParser import SafeConfigParser
 
 import feedparser
-sys.path.append("./lib/tweepy")
 import tweepy
 
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 
 def post_update(status):
-    config = SafeConfigParser()
-    if not config.read('config.ini'):
-        print 'Could not read config file'
-        sys.exit(1)
+    global config
     consumer_key = config.get('twitter', 'consumer_key')
     consumer_secret = config.get('twitter', 'consumer_secret')
     access_token = config.get('twitter', 'access_token')
@@ -44,8 +40,12 @@ def post_update(status):
 
 def main():
     """The main function."""
-    xkcd_rss = "http://xkcd.com/rss.xml"
-    feed = feedparser.parse(xkcd_rss)
+    config = SafeConfigParser()
+    if not config.read('config.ini'):
+        print 'Could not read config file'
+        sys.exit(1)
+    rss_uri = config.get('rss', 'uri')
+    feed = feedparser.parse(rss_uri)
     # lots of scary warnings about possible security risk using this method
     # but for local use I'd rather do this than a try-catch with open()
     if not os.path.isfile('cache.dat'):
@@ -60,7 +60,7 @@ def main():
     # compare with cache
     if cache['id'] != rss['id']:
         #print 'new post'
-        post_update('%s %s #xkcd' % (rss['title'], rss['link']))
+        post_update('%s %s' % (rss['title'], rss['link']))
         cPickle.dump(rss, open('cache.dat', 'wb'), -1)
 
 
