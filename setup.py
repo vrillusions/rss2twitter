@@ -3,12 +3,13 @@ from setuptools import setup
 
 setup(
     name = 'rss2twitter',
-    version = open('src/VERSION', 'r').read(),
+    version = '0.0.2dev',
     package_dir = {'': 'src'},
     data_files = [('etc/rss2twitter', ['src/config-sample.ini'])],
     scripts = ['src/rss2twitter.py'],
     install_requires = ['feedparser', 'tweepy>=1.8'],
 
+    long_description=open('README.txt').read(),
     author = 'Todd Eddy',
     author_email = 'vr@vrillusions.com',
     description = 'Checks rss feed for new posts and adds them to twitter.',
