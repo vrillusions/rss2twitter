@@ -20,6 +20,7 @@ import tweepy
 
 __version__ = '0.0.2'
 
+config = None
 
 def post_update(status):
     global config
@@ -41,6 +42,7 @@ def post_update(status):
 
 def main():
     """The main function."""
+    global config
     parser = OptionParser(version='%prog v' + __version__)
     parser.add_option('-c', '--config', default='config.ini',
                       help='Location of config file (default: %default)',
