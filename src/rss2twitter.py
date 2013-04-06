@@ -65,10 +65,11 @@ def main():
     rss['link'] = feed['entries'][0]['link']
     rss['title'] = feed['entries'][0]['title']
     rss['summary'] = feed['entries'][0]['summary']
+    rss['hashtag'] = ' '.join(['#%s' % i for i in feed['entries'][0]['tags'][0]['term'].split()[:2]])
     # compare with cache
     if cache['id'] != rss['id']:
         #print 'new post'
-        post_update('%s %s' % (rss['title'], rss['link']))
+        post_update('%s %s %s' % (rss['title'], rss['link'], rss['hashtag']))
         cPickle.dump(rss, open('cache.dat', 'wb'), -1)
 
 
