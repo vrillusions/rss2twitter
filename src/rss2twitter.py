@@ -20,6 +20,7 @@ import tweepy
 
 __version__ = '0.0.2'
 
+config = None
 
 def post_update(status):
     global config
@@ -41,10 +42,17 @@ def post_update(status):
 
 def main():
     """The main function."""
+    global config
     parser = OptionParser(version='%prog v' + __version__)
     parser.add_option('-c', '--config', default='config.ini',
                       help='Location of config file (default: %default)',
                       metavar='FILE')
+    parser.add_option('-a', '--all', action='store_true', default=False,
+                      dest='all',
+                      help='Send all RSS items as tweet')
+    parser.add_option('-l', '--limit', dest='limit',
+                      default=10,
+                      help='Use with all parameters, send the first 10 feeds as a tweet')
     (options, args) = parser.parse_args()
     config = SafeConfigParser()
     if not config.read(options.config):
@@ -57,17 +65,40 @@ def main():
     if not os.path.isfile('cache.dat'):
         # make a blank cache file
         cPickle.dump({'id': None}, open('cache.dat', 'wb'), -1)
+
     cache = cPickle.load(open('cache.dat'))
-    rss = {}
-    rss['id'] = feed['entries'][0]['id']
-    rss['link'] = feed['entries'][0]['link']
-    rss['title'] = feed['entries'][0]['title']
-    rss['summary'] = feed['entries'][0]['summary']
-    # compare with cache
-    if cache['id'] != rss['id']:
-        #print 'new post'
-        post_update('%s %s' % (rss['title'], rss['link']))
-        cPickle.dump(rss, open('cache.dat', 'wb'), -1)
+    if options.all:
+        tweet_count = 0
+        for entry in feed['entries']:
+            rss = {
+                'id': entry['id'],
+                'link': entry['link'],
+                'title': entry['title'],
+                'summary': entry['summary'],
+                'hashtag': ' '.join(['#%s' % i for i in entry['tags'][0]['term'].split()[:2]]),
+            }
+            post_update('%s %s %s' % (rss['title'], rss['link'], rss['hashtag']))
+
+            # We keep the first feed in the cache, to use rss2twitter in normal mode the next time
+            if tweet_count == 0:
+                cPickle.dump(rss, open('cache.dat', 'wb'), -1)
+
+            tweet_count += 1
+            if tweet_count >= options.limit:
+                break
+    else:
+        rss = {
+            'id': feed['entries'][0]['id'],
+            'link': feed['entries'][0]['link'],
+            'title': feed['entries'][0]['title'],
+            'summary': feed['entries'][0]['summary'],
+            'hashtag': ' '.join(['#%s' % i for i in feed['entries'][0]['tags'][0]['term'].split()[:2]]),
+        }
+        # compare with cache
+        if cache['id'] != rss['id']:
+            #print 'new post'
+            post_update('%s %s %s' % (rss['title'], rss['link'], rss['hashtag']))
+            cPickle.dump(rss, open('cache.dat', 'wb'), -1)
 
 
 if __name__ == "__main__":
