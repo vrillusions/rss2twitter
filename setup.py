@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name = 'rss2twitter',
-    version = '0.0.3dev',
+    version = '0.0.3',
     package_dir = {'': 'src'},
     data_files = [('etc/rss2twitter', ['src/config-sample.ini'])],
     scripts = ['src/rss2twitter.py'],

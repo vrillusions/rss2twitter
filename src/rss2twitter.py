@@ -18,7 +18,7 @@ import feedparser
 import tweepy
 
 
-__version__ = '0.0.3dev'
+__version__ = '0.0.3'
 
 config = None
 
