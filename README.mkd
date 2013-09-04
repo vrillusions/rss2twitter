@@ -1,4 +1,4 @@
-# RSS Twitter Bot
+# RSS Twitter Bot [![Project Status](http://stillmaintained.com/vrillusions/rss2twitter.png)](http://stillmaintained.com/vrillusions/rss2twitter)
 
 Reads an rss feed and posts it to twitter
 
